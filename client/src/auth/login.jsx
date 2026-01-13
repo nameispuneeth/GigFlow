@@ -1,15 +1,31 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const navigate=useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
-    toast.success("Login Successful");
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(email, password);
+    const response=await fetch("http://localhost:8000/api/auth/login",{
+      method:"POST",
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({
+        email:email,
+        password:password
+      })
+    });
+    const data=await response.json();
+    if(data.status=="ok"){
+      toast.success("Login Successful");
+      navigate("/bid");
+    }
+    else toast.error(data.error);
   };
 
   return (

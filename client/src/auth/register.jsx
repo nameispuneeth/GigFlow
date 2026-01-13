@@ -8,10 +8,33 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [repassword, setRePassword] = useState("");
 
-  const handleSubmit = (e) => {
-    toast.success("Login Successful");
+  const handleSubmit = async(e) => {
+    if(password!=repassword){
+      toast.error("Passwords Doesn't Match");
+      return;
+    } 
+    if(password.length<6){
+      toast.error("Passwords is To Small");
+      return;
+    }
     e.preventDefault();
-    console.log(email, password);
+    const response=await fetch("http://localhost:8000/api/auth/register",{
+      method:"POST",
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({
+        email:email,
+        password:password,
+        name:name
+      })
+    });
+    const data=await response.json();
+    if(data.status=="ok"){
+      toast.success("Registered Successful");
+      navigate("/login");
+    }
+    else toast.error(data.error);
   };
 
   return (
