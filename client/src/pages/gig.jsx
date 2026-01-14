@@ -1,6 +1,8 @@
 import { useState } from "react";
 import {toast} from "react-toastify"
 import { useNavigate } from "react-router-dom";
+import { House } from "lucide-react";
+
 export default function Gig() {
     const [budget,setBudget]=useState(0);  
     const [title,settitle]=useState("");
@@ -40,6 +42,9 @@ export default function Gig() {
     
     return (
         <div className="flex justify-center items-center h-screen bg-gray-200">
+            <div className="absolute left-2 top-2 m-2 p-2 border-2 border-black rounded-full cursor-pointer">
+                <House size={20} onClick={()=>navigate("/")}/>
+            </div>
             <button className="absolute right-2 top-2 bg-black text-white px-5 py-2" onClick={() => navigate("/mygigs")}>My Gigs</button>
 
             <form onSubmit={handleSubmit} className="w-full max-w-sm bg-white p-6 rounded-md border space-y-5">

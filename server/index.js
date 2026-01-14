@@ -68,6 +68,22 @@ app.post("/api/auth/login",async(req,res)=>{
     }
 })
 
+app.get("/api/getuserdet",authMiddleWare,async(req,res)=>{
+    const email=req.user.email;
+    try{
+        const user=await User.findOne({email:email});
+        console.log(user)
+        res.send({status:"ok",name:user.name});
+    }catch(e){
+        res.send({status:'error'});
+    }
+})
+
+app.get("/api/logout",(req,res)=>{
+    res.clearCookie('email');
+    res.send('Cookie has been deleted successfully')
+})
+
 app.post("/api/gigs",authMiddleWare,async (req,res)=>{
     const {title,desc,budget}=req.body;
     const email=req.user.email;
@@ -86,9 +102,12 @@ app.post("/api/gigs",authMiddleWare,async (req,res)=>{
         res.send({status:"error"});    
     }
 })
-app.get("/api/gigs",async(req,res)=>{
+app.get("/api/gigs",authMiddleWare,async(req,res)=>{
+    const email=req.user.email;
     try{
-        const gigs=await Gig.find();
+        const user = await User.findOne({ email }).populate("bids");
+        const biddedGigIds = user.bids.map(bid => bid.gig);
+        const gigs=await Gig.find({postedBy:{$ne:email},status:{$eq:"open"},_id:{$nin:biddedGigIds}});
         res.send({status:"ok",gigs:gigs});
     }catch(e){
         res.send({status:'error'});
@@ -106,6 +125,69 @@ app.get("/api/getusergigs",authMiddleWare,async(req,res)=>{
     }
 })
 
+app.post("/api/bids",authMiddleWare,async(req,res)=>{
+    const email=req.user.email;
+    const {id,message,price}=req.body;
+    try{
+        const gig=await Gig.findById(id);
+        const user=await User.findOne({email:email});
+        if(gig.status=="assigned") return res.send({status:'error',error:'The Gig is Assigned'});
+        const bid=await Bid.create({
+            message:message,
+            price:price,
+            gig:gig._id,
+            email:email
+        });
+        gig.bids.push(bid._id);
+        user.bids.push(bid._id);
+        await gig.save();
+        await user.save();
+        return res.send({status:'ok'});
+    }catch(e){
+        res.send({status:'error',error:"Network Issues"})
+    }
+})
+app.get("/api/getuserbids",authMiddleWare,async(req,res)=>{
+    const email=req.user.email;
+    try{
+        const user=await User.findOne({email:email});
+        const userbids=await Bid.find({_id:{$in:user.bids}}).populate("gig");
+        res.send({status:'ok',bids:userbids});
+    }catch(e){
+        res.send({status:'error',error:'Network Issues'});
+    }
+})
+
+app.get("/api/bids/:id",authMiddleWare,async(req,res)=>{
+    const email=req.user.email;
+    const id=req.params.id;
+    try{
+        const data=await Gig.findById(id).populate("bids");
+        const bids=data.bids;
+        res.send({status:"ok",bids:bids});
+    }catch(e){
+        res.send({status:"error",error:"Network Issues"});
+    }
+})
+
+app.patch("/api/:id/hire",authMiddleWare,async(req,res)=>{
+    const email=req.user.email;
+    const id=req.params.id;
+    console.log(email,id);
+    try{
+        const bid=await Bid.findById(id);
+        const gig=await Gig.findById(bid.gig);
+        gig.assignedto=bid.email;
+        gig.status="assigned";
+        bid.assigned=true;
+        console.log(gig,bid);
+        await gig.save();
+        await bid.save();
+        res.send({status:'ok'})
+    }catch(e){
+        res.send({status:'error',error:'Network Issues'})
+    }
+})
 app.get("/", (req, res) => {
     res.send("Hello World");
 });

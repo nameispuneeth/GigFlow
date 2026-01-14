@@ -8,10 +8,12 @@ import Gig from "./pages/gig"
 import Bid from "./pages/bid"
 import MyBids from "./pages/MyBids";
 import MyGigs from "./pages/MyGigs";
+import HomePage from "./pages/homepage";
 export default function App(){
   return(
    <BrowserRouter>
    <Routes>
+   <Route path="/" element={<HomePage />} />
     <Route path="/bid" element={<Bid />} />
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Register />} />
