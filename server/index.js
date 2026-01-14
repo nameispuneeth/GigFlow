@@ -15,7 +15,10 @@ const Bid = require("./models/bids.modal")
 const secretCode = process.env.secretCode;
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: [
+        "http://localhost:5173",
+        "https://gigflow-puneeth.vercel.app"
+    ],
     credentials: true
 }));
 app.use(cookieParser());
@@ -27,6 +30,12 @@ mongoose.connect(process.env.mongodbURI)
 function authMiddleWare(req, res, next) {
     try {
         const encryptedEmail = req.cookies.email;
+        if (!encryptedEmail) {
+            return res.status(401).json({
+                status: "error",
+                error: "Session Expired"
+            });
+        }
         const decoded = jwt.verify(encryptedEmail, secretCode);
         req.user = decoded;
         next();
@@ -60,7 +69,7 @@ app.post("/api/auth/login", async (req, res) => {
         res.cookie("email", encryptedEmail, {
             httpOnly: true,
             secure: true,
-            sameSite: "lax",
+            sameSite: "none",
             maxAge: 24 * 60 * 60 * 1000
         });
         return res.send({ status: 'ok' });
