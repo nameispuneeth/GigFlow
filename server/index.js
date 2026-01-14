@@ -59,7 +59,7 @@ app.post("/api/auth/login", async (req, res) => {
         const encryptedEmail = jwt.sign({ email }, secretCode);
         res.cookie("email", encryptedEmail, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: "lax",
             maxAge: 24 * 60 * 60 * 1000
         });
