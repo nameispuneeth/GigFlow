@@ -6,7 +6,7 @@ export default function MyBids() {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const getUserBids = async () => {
-        const response = await fetch("http://localhost:8000/api/getuserbids", {
+        const response = await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/getuserbids`, {
             method: "GET",
             credentials: "include"
         })

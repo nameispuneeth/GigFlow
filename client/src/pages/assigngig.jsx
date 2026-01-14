@@ -8,7 +8,7 @@ export default function AssignGig({ gig }) {
     const [bids, setbids] = useState([]);
     const navigate = useNavigate();
     const findBids = async () => {
-        const response = await fetch(`http://localhost:8000/api/bids/${gig._id}`, {
+        const response = await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/bids/${gig._id}`, {
             method: "GET",
             credentials: "include"
         })
@@ -23,7 +23,7 @@ export default function AssignGig({ gig }) {
         findBids();
     }, [])
     const handleSubmit=async(val)=>{
-        const response=await fetch(`http://localhost:8000/api/${val._id}/hire`,{
+        const response=await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/${val._id}/hire`,{
             method:"PATCH",
             credentials:"include"
         })

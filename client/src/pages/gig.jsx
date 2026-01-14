@@ -18,7 +18,7 @@ export default function Gig() {
             toast.error("Description Is Required");
             return;
         }
-        const response=await fetch("http://localhost:8000/api/gigs",{
+        const response=await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/gigs`,{
             method:"POST",
             headers:{
                 "Content-Type":"application/json"

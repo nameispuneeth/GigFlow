@@ -10,7 +10,7 @@ export default function MyGigs() {
     const [assignGig,setassignGig]=useState(false);
     const [selected,setselected]=useState("");
     const getUserGigs=async()=>{
-        const response=await fetch("http://localhost:8000/api/getusergigs",{
+        const response=await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/getusergigs`,{
             method:"GET",
             credentials:"include"
         });

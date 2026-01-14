@@ -9,7 +9,7 @@ const HomePage = () => {
   const [name,setname]=useState("Guest");
   const [isloggedIn,setisLoggedIn]=useState(false);
   let findUserDet=async()=>{
-    const response=await fetch("http://localhost:8000/api/getuserdet",{
+    const response=await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/getuserdet`,{
       method:"GET",
       credentials:"include"
     });
@@ -29,7 +29,7 @@ const HomePage = () => {
   },[])
 
   const handleLogOut=async()=>{
-    const response=await fetch("http://localhost:8000/api/logout",{
+    const response=await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/logout`,{
       method:"GET",
       credentials:"include"
     });

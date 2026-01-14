@@ -19,7 +19,7 @@ export default function Register() {
       return;
     }
     e.preventDefault();
-    const response=await fetch("http://localhost:8000/api/auth/register",{
+    const response=await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/auth/register`,{
       method:"POST",
       headers:{
         'Content-Type':'application/json'

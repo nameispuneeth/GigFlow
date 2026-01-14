@@ -9,7 +9,7 @@ export default function Bid() {
     const [gigs, setgigs] = useState([]);
 
     const getAllGigs = async () => {
-        const response = await fetch("http://localhost:8000/api/gigs", {
+        const response = await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/gigs`, {
             method: "GET",
             credentials: "include"
         });
@@ -58,7 +58,7 @@ export default function Bid() {
 
         const { message, price } = res.value;
         console.log(message, price);
-        const response = await fetch("http://localhost:8000/api/bids", {
+        const response = await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/bids`, {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
