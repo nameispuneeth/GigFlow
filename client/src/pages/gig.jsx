@@ -1,19 +1,58 @@
+import { useState } from "react";
+import {toast} from "react-toastify"
+import { useNavigate } from "react-router-dom";
 export default function Gig() {
-    const handleSubmit = () => {
-        return;
+    const [budget,setBudget]=useState(0);  
+    const [title,settitle]=useState("");
+    const [desc,setdesc]=useState("");
+    const navigate=useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if(title==""){
+            toast.error("Title Is Required");
+            return;
+        }else if(desc==""){
+            toast.error("Description Is Required");
+            return;
+        }
+        const response=await fetch("http://localhost:8000/api/gigs",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            credentials:"include",
+            body:JSON.stringify({
+                title,desc,budget
+            })
+        })
+        const data=await response.json();
+        if(data.status=="error"){
+            toast.error(data.error);
+            navigate("/login");
+        }else{
+            toast.success("Gig Sent Succesfully");
+            settitle("");
+            setdesc("");
+            setBudget(0);
+        }
     }
+    
     return (
         <div className="flex justify-center items-center h-screen bg-gray-200">
-            <form onSubmit={handleSubmit()} className="w-full max-w-sm bg-white p-6 rounded-md border space-y-5">
+            <button className="absolute right-2 top-2 bg-black text-white px-5 py-2" onClick={() => navigate("/mygigs")}>My Gigs</button>
+
+            <form onSubmit={handleSubmit} className="w-full max-w-sm bg-white p-6 rounded-md border space-y-5">
                 <p className="text-4xl font-bold text-center mb-6">Post Job</p>
                 <input
                     type="text"
                     placeholder="Title"
                     required={true}
+                    value={title}
                     className="w-full mb-3 px-3 py-2 border border-black rounded focus:outline-none focus:ring-1 focus:ring-black"
-                    onChange={(e) => setText(e.target.value)}
+                    onChange={(e) => settitle(e.target.value)}
                 />
-                <textarea cols={3} rows={3} placeholder="Description" className="w-full mb-3 px-3 py-2 border border-black rounded focus:outline-none focus:ring-1 focus:ring-black"></textarea>
+                <textarea cols={3} rows={3} value={desc} required={true} onChange={(e)=>setdesc(e.target.value)} placeholder="Description" className="w-full mb-3 px-3 py-2 border border-black rounded focus:outline-none focus:ring-1 focus:ring-black"></textarea>
                 <div className="w-full mb-3 px-3 py-2 flex gap-2 border border-black rounded focus:outline-none focus:ring-1 focus:ring-black"
                 >
                     <p className="text-bold text-lg">₹</p>
@@ -21,8 +60,11 @@ export default function Gig() {
                         type="number"
                         placeholder="Budget"
                         required={true}
+                        value={budget}
                         className="w-full focus:outline-none"
-                        onChange={(e) => setBudget(e.target.value)}
+                        onChange={(e) =>{
+                            if(e.target.value>=0) setBudget(e.target.value)
+                        }}
                     />
                 </div>
                 <button className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">
