@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify";
 import AssignGig from "./assigngig";
 import { House } from "lucide-react";
-import { AuthContext } from "../authContext/AuthContext";
+import { AuthContext } from "../authContext/AuthProvider";
 export default function MyGigs() {
-    const {isLoggedIn,setIsLoggedIn}=useContext(AuthContext);
+    const {isLoggedIn,setIsLoggedIn,authLoading}=useContext(AuthContext);
 
     const navigate = useNavigate();
     const [gigs,setgigs]=useState([]);
@@ -27,12 +27,13 @@ export default function MyGigs() {
         }
     }
     useEffect(()=>{
-        if(!isLoggedIn){
+        if(!authLoading && !isLoggedIn){
             toast.error("Login Required");
             navigate("/login");
         }
         getUserGigs();
     },[]) 
+
     return (
         <div className="flex flex-col justify-center items-center min-h-screen bg-gray-200">
             <div className="absolute left-2 top-2 m-2 p-2 border-2 border-black rounded-full cursor-pointer">
@@ -62,7 +63,7 @@ export default function MyGigs() {
                                     <p className="text-sm font-semibold"> {data.budget}</p>
                                 </div>
                                 {data.status=="open" && 
-                                <button className="bg-black text-white px-4 py-1" onClick={()=>{
+                                <button className="bg-black text-white px-4 py-1 w-full" onClick={()=>{
                                     setassignGig(true);
                                     setselected(data);
                                 }}>View Bids</button>}

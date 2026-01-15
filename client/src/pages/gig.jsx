@@ -2,11 +2,11 @@ import { useState,useContext, useEffect } from "react";
 import {toast} from "react-toastify"
 import { useNavigate } from "react-router-dom";
 import { House } from "lucide-react";
-import { AuthContext } from "../authContext/AuthContext";
+import { AuthContext } from "../authContext/AuthProvider";
 
 export default function Gig() {
     
-    const {isLoggedIn,setIsLoggedIn}=useContext(AuthContext);
+    const {isLoggedIn,setIsLoggedIn,authLoading}=useContext(AuthContext);
     const [budget,setBudget]=useState(0);  
     const [title,settitle]=useState("");
     const [desc,setdesc]=useState("");
@@ -48,7 +48,7 @@ export default function Gig() {
     }
 
     useEffect(()=>{
-        if(!isLoggedIn){
+        if(!authLoading && !isLoggedIn){
             toast.error("Login Required");
             navigate("/login");
         }

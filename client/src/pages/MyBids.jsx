@@ -1,10 +1,10 @@
 import { useEffect, useState,useContext } from "react";
 import { useNavigate } from "react-router-dom"
 import { House } from "lucide-react";
-import { AuthContext } from "../authContext/AuthContext";
+import { AuthContext } from "../authContext/AuthProvider";
 import { toast } from "react-toastify";
 export default function MyBids() {
-    const {isLoggedIn,setIsLoggedIn}=useContext(AuthContext);
+    const {isLoggedIn,setIsLoggedIn,authLoading}=useContext(AuthContext);
 
     const navigate = useNavigate();
     const [data, setData] = useState([]);
@@ -24,7 +24,7 @@ export default function MyBids() {
         }
     }
     useEffect(() => {
-        if(!isLoggedIn){
+        if(!authLoading && !isLoggedIn){
             toast.error("Login Required");
             navigate("/login")
         }

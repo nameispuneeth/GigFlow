@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../authContext/AuthContext";
+import { AuthContext } from "../authContext/AuthProvider";
 
 export default function Login() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);

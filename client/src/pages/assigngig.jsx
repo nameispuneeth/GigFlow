@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import MyGigs from "./MyGigs";
 import { House } from "lucide-react";
-import { AuthContext } from "../authContext/AuthContext";
+import { AuthContext } from "../authContext/AuthProvider";
 
 export default function AssignGig({ gig }) {
-  const {isLoggedIn,setIsLoggedIn}=useContext(AuthContext);
+  const {isLoggedIn,setIsLoggedIn,authLoading}=useContext(AuthContext);
     const [bids, setbids] = useState([]);
     const [loading,setloading]=useState(false);
 
@@ -29,7 +29,7 @@ export default function AssignGig({ gig }) {
         }
     }
     useEffect(() => {
-      if(!isLoggedIn){
+      if(!authLoading && !isLoggedIn){
         toast.error("Login Required");
         navigate("/login");
       }

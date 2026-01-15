@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify";
 import Swal from "sweetalert2"
 import { House } from "lucide-react";
-import { AuthContext } from "../authContext/AuthContext";
+import { AuthContext } from "../authContext/AuthProvider";
 export default function Bid() {
 
-    const {isLoggedIn,setIsLoggedIn}=useContext(AuthContext);
+    const {isLoggedIn,setIsLoggedIn,authLoading}=useContext(AuthContext);
     const [loading,setloading]=useState(false);
     const navigate = useNavigate();
     const [gigs, setgigs] = useState([]);
@@ -29,7 +29,7 @@ export default function Bid() {
         }
     }
     useEffect(() => {
-        if(!isLoggedIn){
+        if(!authLoading && !isLoggedIn){
             toast.error("Login Required");
             navigate("/login");
         }
@@ -65,7 +65,7 @@ export default function Bid() {
                 return { message, price };
             },
         });
-
+        if(!res.isConfirmed) return;
         const { message, price } = res.value;
         const response = await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/bids`, {
             method: "POST",

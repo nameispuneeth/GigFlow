@@ -2,14 +2,14 @@ import React, {  useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FilePlus, HandCoins } from "lucide-react";
 import { toast } from "react-toastify";
-import { AuthContext } from "../authContext/AuthContext";
+import { AuthContext } from "../authContext/AuthProvider";
 const HomePage = () => {
   
   const navigate = useNavigate();
-  const {isLoggedIn,setIsLoggedIn}=useContext(AuthContext);
+  const {isLoggedIn,setIsLoggedIn,authLoading}=useContext(AuthContext);
   
   useEffect(()=>{
-    if(!isLoggedIn){
+    if(!authLoading && !isLoggedIn){
       toast.error("Login Required");
       navigate("/login");
     }
@@ -53,7 +53,7 @@ const HomePage = () => {
           Welcome Back !
         </h1>
       </div>
-      {!isLoggedIn ? <button className="absolute top-2 left-2 bg-black p-2 text-white rounded-lg font-bold px-4 py-1 " onClick={()=>navigate("/login")}>Login</button> : <button className="absolute rounded-lg font-bold px-4 py-1 top-2 left-2 bg-red-600 p-2 text-white" onClick={()=>handleLogOut()}>LogOut</button>}
+      {!authLoading && !isLoggedIn ? <button className="absolute top-2 left-2 bg-black p-2 text-white rounded-lg font-bold px-4 py-1 " onClick={()=>navigate("/login")}>Login</button> : <button className="absolute rounded-lg font-bold px-4 py-1 top-2 left-2 bg-red-600 p-2 text-white" onClick={()=>handleLogOut()}>LogOut</button>}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl w-full mx-auto">
         {cards.map((card, index) => (
           <div
