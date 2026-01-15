@@ -1,31 +1,18 @@
-import React, {  useEffect, useState } from "react";
+import React, {  useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FilePlus, HandCoins } from "lucide-react";
 import { toast } from "react-toastify";
-
+import { AuthContext } from "../authContext/AuthContext";
 const HomePage = () => {
   
   const navigate = useNavigate();
-  const [name,setname]=useState("Guest");
-  const [isloggedIn,setisLoggedIn]=useState(false);
-  let findUserDet=async()=>{
-    const response=await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/getuserdet`,{
-      method:"GET",
-      credentials:"include"
-    });
-    const data=await response.json();
-    console.log(data)
-    if(data.status="ok"){
-      setname(data.name);
-      setisLoggedIn(true);
-    }
-    else{
-      toast.error(data.error);
-      if(data.error=="Session Expired") navigate("/login")
-    }
-  }
+  const {isLoggedIn,setIsLoggedIn}=useContext(AuthContext);
+  
   useEffect(()=>{
-    findUserDet();
+    if(!isLoggedIn){
+      toast.error("Login Required");
+      navigate("/login");
+    }
   },[])
 
   const handleLogOut=async()=>{
@@ -34,8 +21,7 @@ const HomePage = () => {
       credentials:"include"
     });
    
-    setisLoggedIn(false);
-    setname("Guest");
+    setIsLoggedIn(false);
   }
 
   const cards = [
@@ -64,10 +50,10 @@ const HomePage = () => {
     <div className={` min-h-screen relative flex flex-col items-center py-8 px-4 sm:px-6`}>
       <div className="max-w-3xl text-center mb-12 mt-[150px]">
         <h1 className={`text-3xl sm:text-5xl font-bold mb-4 font-sora text-gray-900`}>
-          Welcome Back, {name}!
+          Welcome Back !
         </h1>
       </div>
-      {!isloggedIn ? <button className="absolute top-2 left-2 bg-black p-2 text-white rounded-lg font-bold px-4 py-1 " onClick={()=>navigate("/login")}>Login</button> : <button className="absolute rounded-lg font-bold px-4 py-1 top-2 left-2 bg-red-600 p-2 text-white" onClick={()=>handleLogOut()}>LogOut</button>}
+      {!isLoggedIn ? <button className="absolute top-2 left-2 bg-black p-2 text-white rounded-lg font-bold px-4 py-1 " onClick={()=>navigate("/login")}>Login</button> : <button className="absolute rounded-lg font-bold px-4 py-1 top-2 left-2 bg-red-600 p-2 text-white" onClick={()=>handleLogOut()}>LogOut</button>}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl w-full mx-auto">
         {cards.map((card, index) => (
           <div

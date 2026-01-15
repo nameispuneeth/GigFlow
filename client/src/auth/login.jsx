@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState,useContext } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../authContext/AuthContext";
 
 export default function Login() {
+  const {isLoggedIn,setIsLoggedIn}=useContext(AuthContext);
   const navigate=useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,6 +25,7 @@ export default function Login() {
     });
     const data=await response.json();
     if(data.status=="ok"){
+      setIsLoggedIn(true);
       toast.success("Login Successful");
       navigate("/bid");
     }

@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState,useContext } from "react"
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import MyGigs from "./MyGigs";
 import { House } from "lucide-react";
+import { AuthContext } from "../authContext/AuthContext";
 
 export default function AssignGig({ gig }) {
+  const {isLoggedIn,setIsLoggedIn}=useContext(AuthContext);
     const [bids, setbids] = useState([]);
     const navigate = useNavigate();
     const findBids = async () => {
@@ -16,10 +18,17 @@ export default function AssignGig({ gig }) {
         if (data.status == "ok") setbids(data.bids);
         else {
             toast.error(data.error);
-            if (data.error == "Session Expired") navigate("/login")
+            if (data.error == "Session Expired"){
+              setIsLoggedIn(false);
+              navigate("/login")
+            }
         }
     }
     useEffect(() => {
+      if(!isLoggedIn){
+        toast.error("Login Required");
+        navigate("/login");
+      }
         findBids();
     }, [])
     const handleSubmit=async(val)=>{
@@ -34,7 +43,10 @@ export default function AssignGig({ gig }) {
             <MyGigs/>
         }else{
             toast.error(temp.error);
-            if(temp.error=="Session Expired") navigate("/login");
+            if(temp.error=="Session Expired"){
+              setIsLoggedIn(false);
+              navigate("/login");
+            }
         }
     }
 

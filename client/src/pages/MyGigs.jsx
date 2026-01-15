@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState ,useContext} from "react";
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify";
 import AssignGig from "./assigngig";
 import { House } from "lucide-react";
-
+import { AuthContext } from "../authContext/AuthContext";
 export default function MyGigs() {
+    const {isLoggedIn,setIsLoggedIn}=useContext(AuthContext);
+
     const navigate = useNavigate();
     const [gigs,setgigs]=useState([]);
     const [assignGig,setassignGig]=useState(false);
@@ -18,10 +20,17 @@ export default function MyGigs() {
         if(data.status=="ok") setgigs(data.gigs);
         else{
             toast.error(data.error);
-            if(data.error=='Session Expired') navigate("/login")
+            if(data.error=='Session Expired'){
+                setIsLoggedIn(false);
+                navigate("/login")
+            }
         }
     }
     useEffect(()=>{
+        if(!isLoggedIn){
+            toast.error("Login Required");
+            navigate("/login");
+        }
         getUserGigs();
     },[]) 
     return (

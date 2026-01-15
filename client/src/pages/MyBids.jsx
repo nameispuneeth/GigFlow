@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useContext } from "react";
 import { useNavigate } from "react-router-dom"
 import { House } from "lucide-react";
-
+import { AuthContext } from "../authContext/AuthContext";
+import { toast } from "react-toastify";
 export default function MyBids() {
+    const {isLoggedIn,setIsLoggedIn}=useContext(AuthContext);
+
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const getUserBids = async () => {
@@ -11,14 +14,20 @@ export default function MyBids() {
             credentials: "include"
         })
         const data = await response.json();
-        console.log(data);
         if (data.status == "ok") setData(data.bids);
         else {
             toast.error(data.error);
-            if (data.error == "Session Expired") navigate("/login");
+            if (data.error == "Session Expired"){
+                setIsLoggedIn(false);
+                navigate("/login");
+            }
         }
     }
     useEffect(() => {
+        if(!isLoggedIn){
+            toast.error("Login Required");
+            navigate("/login")
+        }
         getUserBids();
     }, [])
 

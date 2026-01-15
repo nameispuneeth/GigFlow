@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState,useContext, useEffect } from "react";
 import {toast} from "react-toastify"
 import { useNavigate } from "react-router-dom";
 import { House } from "lucide-react";
+import { AuthContext } from "../authContext/AuthContext";
 
 export default function Gig() {
+    
+    const {isLoggedIn,setIsLoggedIn}=useContext(AuthContext);
     const [budget,setBudget]=useState(0);  
     const [title,settitle]=useState("");
     const [desc,setdesc]=useState("");
@@ -32,6 +35,7 @@ export default function Gig() {
         if(data.status=="error"){
             toast.error(data.error);
             navigate("/login");
+            if(data.error=="Session Expired") setIsLoggedIn(false);
         }else{
             toast.success("Gig Sent Succesfully");
             settitle("");
@@ -39,6 +43,13 @@ export default function Gig() {
             setBudget(0);
         }
     }
+
+    useEffect(()=>{
+        if(!isLoggedIn){
+            toast.error("Login Required");
+            navigate("/login");
+        }
+    },[])
     
     return (
         <div className="flex justify-center items-center h-screen bg-gray-200">
