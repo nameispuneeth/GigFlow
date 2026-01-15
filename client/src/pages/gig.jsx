@@ -91,7 +91,7 @@ export default function Gig() {
                         }}
                     />
                 </div>
-                <button className="bg-black text-white px-7 w-full py-2 rounded hover:bg-gray-800 transition flex items-center justify-center">
+                <button className="bg-black text-white px-7 w-full py-2 rounded hover:bg-gray-800 transition flex items-center justify-center" disabled={loading}>
                     {loading ? spinner() : "Post Job"}
                 </button>
             </form>
