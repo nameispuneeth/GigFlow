@@ -20,8 +20,8 @@ const HomePage = () => {
       method:"GET",
       credentials:"include"
     });
-   
     setIsLoggedIn(false);
+    navigate("/login")
   }
 
   const cards = [
@@ -53,7 +53,7 @@ const HomePage = () => {
           Welcome Back !
         </h1>
       </div>
-      {!authLoading && !isLoggedIn ? <button className="absolute top-2 left-2 bg-black p-2 text-white rounded-lg font-bold px-4 py-1 " onClick={()=>navigate("/login")}>Login</button> : <button className="absolute rounded-lg font-bold px-4 py-1 top-2 left-2 bg-red-600 p-2 text-white" onClick={()=>handleLogOut()}>LogOut</button>}
+      {!authLoading && !isLoggedIn ? <button className="absolute top-2 right-2 bg-black p-2 text-white rounded-lg font-bold px-4 py-1 " onClick={()=>navigate("/login")}>Login</button> : <button className="absolute rounded-lg font-bold px-4 py-1 top-2 right-2 bg-red-600 p-2 text-white" onClick={()=>handleLogOut()}>LogOut</button>}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl w-full mx-auto">
         {cards.map((card, index) => (
           <div
