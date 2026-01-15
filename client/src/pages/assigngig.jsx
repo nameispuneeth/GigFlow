@@ -8,13 +8,17 @@ import { AuthContext } from "../authContext/AuthContext";
 export default function AssignGig({ gig }) {
   const {isLoggedIn,setIsLoggedIn}=useContext(AuthContext);
     const [bids, setbids] = useState([]);
+    const [loading,setloading]=useState(false);
+
     const navigate = useNavigate();
     const findBids = async () => {
+      setloading(true);
         const response = await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/bids/${gig._id}`, {
             method: "GET",
             credentials: "include"
         })
         const data = await response.json();
+        setloading(false);
         if (data.status == "ok") setbids(data.bids);
         else {
             toast.error(data.error);
@@ -48,6 +52,11 @@ export default function AssignGig({ gig }) {
               navigate("/login");
             }
         }
+    }
+    const spinner = () => {
+      return (
+        <span className="w-4 h-4 border-2 border-white border-t-transparent p-2.5 rounded-full animate-spin"></span>
+      )
     }
 
     return (
@@ -87,7 +96,7 @@ export default function AssignGig({ gig }) {
                           </div>
                         </div>
                       
-                       <button className="bg-black text-white px-7 py-1" onClick={()=>handleSubmit(val)}> Assign Bid </button>
+                       <button className="bg-black text-white px-7 w-full py-2 rounded hover:bg-gray-800 transition flex items-center justify-center" disabled={loading} onClick={()=>handleSubmit(val)}> {loading ? spinner() : "Assign Bid"} </button>
                       </div>
                     ))}
                     </>}

@@ -10,10 +10,12 @@ export default function Gig() {
     const [budget,setBudget]=useState(0);  
     const [title,settitle]=useState("");
     const [desc,setdesc]=useState("");
+    const [loading,setloading]=useState(false);
     const navigate=useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setloading(true);
         if(title==""){
             toast.error("Title Is Required");
             return;
@@ -32,6 +34,7 @@ export default function Gig() {
             })
         })
         const data=await response.json();
+        setloading(false);
         if(data.status=="error"){
             toast.error(data.error);
             navigate("/login");
@@ -50,6 +53,11 @@ export default function Gig() {
             navigate("/login");
         }
     },[])
+    const spinner = () => {
+        return (
+          <span className="w-4 h-4 border-2 border-white border-t-transparent p-2.5 rounded-full animate-spin"></span>
+        )
+      }
     
     return (
         <div className="flex justify-center items-center h-screen bg-gray-200">
@@ -83,8 +91,8 @@ export default function Gig() {
                         }}
                     />
                 </div>
-                <button className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">
-                    Post Job
+                <button className="bg-black text-white px-7 w-full py-2 rounded hover:bg-gray-800 transition flex items-center justify-center">
+                    {loading ? spinner() : "Post Job"}
                 </button>
             </form>
         </div>

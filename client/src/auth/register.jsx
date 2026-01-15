@@ -8,6 +8,7 @@ export default function Register() {
   const [name,setName]=useState("");
   const [password, setPassword] = useState("");
   const [repassword, setRePassword] = useState("");
+  const [loading, setloading] = useState(false);
 
   const handleSubmit = async(e) => {
     if(password!=repassword){
@@ -37,6 +38,12 @@ export default function Register() {
     }
     else toast.error(data.error);
   };
+
+  const spinner = () => {
+    return (
+      <span className="w-4 h-4 border-2 border-white border-t-transparent p-2.5 rounded-full animate-spin"></span>
+    )
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-200">
@@ -84,8 +91,12 @@ export default function Register() {
           onChange={(e) => setRePassword(e.target.value)}
         />
 
-        <button className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">
-          Register
+        <button
+          disabled={loading}
+          className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition 
+             flex items-center justify-center"
+        >
+          {loading ? spinner() : "Register"}
         </button>
 
         <p className="text-sm text-center mt-4">

@@ -7,15 +7,18 @@ import { AuthContext } from "../authContext/AuthContext";
 export default function Bid() {
 
     const {isLoggedIn,setIsLoggedIn}=useContext(AuthContext);
+    const [loading,setloading]=useState(false);
     const navigate = useNavigate();
     const [gigs, setgigs] = useState([]);
 
     const getAllGigs = async () => {
+        setloading(true);
         const response = await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/gigs`, {
             method: "GET",
             credentials: "include"
         });
         const data = await response.json();
+        setloading(false);
         if (data.status == "ok") setgigs(data.gigs);
         else {
             toast.error(data.error);
@@ -87,6 +90,12 @@ export default function Bid() {
 
     }
 
+    const spinner = () => {
+        return (
+          <span className="w-4 h-4 border-2 border-white border-t-transparent p-2.5 rounded-full animate-spin"></span>
+        )
+      }
+
     return (
         <div className="flex flex-col justify-center items-center min-h-screen bg-gray-200">
             <div className="absolute left-2 top-2 m-2 p-2 border-2 border-black rounded-full cursor-pointer">
@@ -113,7 +122,7 @@ export default function Bid() {
                                         <p className="">Budget : ₹</p>
                                         <p className="font-medium"> {data.budget}</p>
                                     </div>
-                                    <button className="items-center bg-black text-white px-7 py-1" onClick={() => handleBid(data)}>Bid</button>
+                                    <button className="bg-black text-white px-7 w-full py-2 rounded hover:bg-gray-800 transition flex items-center justify-center" disabled={loading} onClick={() => handleBid(data)}>{loading ? spinner() :"Bid"}</button>
                                 </div>
                             </div>
                         )
