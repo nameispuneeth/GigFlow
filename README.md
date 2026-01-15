@@ -55,6 +55,18 @@ The application supports the complete flow from gig posting to bidding, hiring, 
 
 ---
 
+## Project Screenshots
+<img width="677" height="617" alt="Screenshot 2026-01-15 160956" src="https://github.com/user-attachments/assets/e6c82367-9f3a-4fff-95d7-5f5de0e98b97" />
+<img width="716" height="767" alt="Screenshot 2026-01-15 161002" src="https://github.com/user-attachments/assets/639bc0a7-f999-4e60-b1c9-5683b24e9dd6" />
+<img width="1427" height="683" alt="Screenshot 2026-01-15 161222" src="https://github.com/user-attachments/assets/1947fe02-5e95-4e36-9633-99fd577d8e3d" />
+<img width="1899" height="864" alt="Screenshot 2026-01-15 160842" src="https://github.com/user-attachments/assets/1f166564-fb80-4257-bd97-5f3217cdda66" />
+<img width="1888" height="830" alt="Screenshot 2026-01-15 160855" src="https://github.com/user-attachments/assets/f514d60f-2887-44cf-8ec6-bee91ed96232" />
+<img width="1907" height="868" alt="Screenshot 2026-01-15 160922" src="https://github.com/user-attachments/assets/6b17a8c2-4893-4670-be39-6c1738a3945d" />
+<img width="1089" height="848" alt="Screenshot 2026-01-15 161233" src="https://github.com/user-attachments/assets/2beb1c02-67ee-4c16-a6ac-8ff7037f626f" />
+<img width="674" height="607" alt="Screenshot 2026-01-15 161457" src="https://github.com/user-attachments/assets/9ef86e6e-c76f-4168-af01-a51da0e53b8d" />
+
+---
+
 ## Project Structure
 
 GigFlow/
