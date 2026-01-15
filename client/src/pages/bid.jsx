@@ -7,7 +7,7 @@ import { AuthContext } from "../authContext/AuthProvider";
 export default function Bid() {
 
     const { isLoggedIn, setIsLoggedIn, authLoading } = useContext(AuthContext);
-    const [loading, setloading] = useState(false);
+    const [loading, setloading] = useState("");
     const navigate = useNavigate();
     const [gigs, setgigs] = useState([]);
     const [dataloading, setdataloading] = useState(false);
@@ -74,7 +74,7 @@ export default function Bid() {
         });
         if (!res.isConfirmed) return;
         const { message, price } = res.value;
-        setloading(true);
+        setloading(data._id);
         const response = await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/bids`, {
             method: "POST",
             credentials: "include",
@@ -86,8 +86,9 @@ export default function Bid() {
             })
         });
         const bdata = await response.json();
-        setloading(false);
+        setloading("");
         if (bdata.status == "ok") {
+            setgigs(gigs.filter(item=>item._id!=data._id))
             toast.success("Your bid sent successfully")
         } else {
             toast.error(bdata.error);
@@ -150,7 +151,7 @@ export default function Bid() {
                                             <p className="">Budget : ₹</p>
                                             <p className="font-medium"> {data.budget}</p>
                                         </div>
-                                        <button className="bg-black text-white px-7 w-full py-2 rounded hover:bg-gray-800 transition flex items-center justify-center" disabled={loading} onClick={() => handleBid(data)}>{loading ? spinner() : "Bid"}</button>
+                                        <button className="bg-black text-white px-7 w-full py-2 rounded hover:bg-gray-800 transition flex items-center justify-center" disabled={loading==data._id} onClick={() => handleBid(data)}>{loading==data._id ? spinner() : "Bid"}</button>
                                     </div>
                                 </div>
                             )

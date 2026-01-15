@@ -39,17 +39,17 @@ export default function AssignGig({ gig }) {
     }, [])
     
     const handleSubmit=async(val)=>{
-      setloading(true);
+      setloading(val._id);
         const response=await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/${val._id}/hire`,{
             method:"PATCH",
             credentials:"include"
         })
         const temp=await response.json();
-        setloading(false);
+        setloading("");
         if(temp.status=="ok"){
             toast.success("Gig Assigned Succesfully");
-            <MyGigs/>
-        }else{
+            navigate(0);
+          }else{
             toast.error(temp.error);
             if(temp.error=="Session Expired"){
               setIsLoggedIn(false);
@@ -110,7 +110,7 @@ export default function AssignGig({ gig }) {
                           </div>
                         </div>
                       
-                       <button className="bg-black text-white px-7 w-full py-2 rounded hover:bg-gray-800 transition flex items-center justify-center" disabled={loading} onClick={()=>handleSubmit(val)}> {loading ? spinner() : "Assign Bid"} </button>
+                       <button className="bg-black text-white px-7 w-full py-2 rounded hover:bg-gray-800 transition flex items-center justify-center" disabled={loading==val._id} onClick={()=>handleSubmit(val)}> {loading==val._id ? spinner() : "Assign Bid"} </button>
                       </div>
                     ))}
                     </>}
