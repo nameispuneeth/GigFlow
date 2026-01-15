@@ -82,7 +82,6 @@ app.get("/api/getuserdet", authMiddleWare, async (req, res) => {
     const email = req.user.email;
     try {
         const user = await User.findOne({ email: email });
-        console.log(user)
         res.send({ status: "ok", name: user.name });
     } catch (e) {
         res.send({ status: 'error' });
@@ -183,14 +182,12 @@ app.get("/api/bids/:id", authMiddleWare, async (req, res) => {
 app.patch("/api/:id/hire", authMiddleWare, async (req, res) => {
     const email = req.user.email;
     const id = req.params.id;
-    console.log(email, id);
     try {
         const bid = await Bid.findById(id);
         const gig = await Gig.findById(bid.gig);
         gig.assignedto = bid.email;
         gig.status = "assigned";
         bid.assigned = true;
-        console.log(gig, bid);
         await gig.save();
         await bid.save();
         res.send({ status: 'ok' })

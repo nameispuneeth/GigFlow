@@ -8,12 +8,16 @@ export default function MyBids() {
 
     const navigate = useNavigate();
     const [data, setData] = useState([]);
+    const [loading,setloading]=useState(false);
+
     const getUserBids = async () => {
+        setloading(true);
         const response = await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/getuserbids`, {
             method: "GET",
             credentials: "include"
         })
         const data = await response.json();
+        setloading(false);
         if (data.status == "ok") setData(data.bids);
         else {
             toast.error(data.error);
@@ -31,6 +35,14 @@ export default function MyBids() {
         getUserBids();
     }, [])
 
+    const BigSpinner = () => {
+        return (
+            <div className="w-full flex justify-center items-center">
+          <span className="w-10 h-10 border-2 flex justify-center items-center m-10 border-black border-t-transparent p-2.5 rounded-full animate-spin"></span>
+          </div>
+        )
+      }
+
     return (
         <div className="flex flex-col justify-center items-center min-h-screen bg-gray-200">
             <p className="text-center text-4xl m-5">My Bids : </p>
@@ -39,7 +51,8 @@ export default function MyBids() {
             </div>
             <button className="absolute right-2 top-2 bg-black text-white px-5 py-2" onClick={() => navigate("/bid")}>All Bids</button>
             <div className="w-full max-w-sm bg-white p-6 rounded-md border space-y-5 mb-10">
-                {data.length == 0 ? <p className="text-center text-3xl px-6 py-10">No bids placed so far</p> : <>
+                {loading ? BigSpinner() : <>
+                    {data.length == 0 ? <p className="text-center text-3xl px-6 py-10">No bids placed so far</p> : <>
                     {data.map((data, idx) => (
                         (
                             <div key={idx}>
@@ -77,6 +90,8 @@ export default function MyBids() {
                     ))}
 
                 </>}
+                </>}
+                
             </div>
         </div>
     )

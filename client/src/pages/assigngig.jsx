@@ -9,16 +9,17 @@ export default function AssignGig({ gig }) {
   const {isLoggedIn,setIsLoggedIn,authLoading}=useContext(AuthContext);
     const [bids, setbids] = useState([]);
     const [loading,setloading]=useState(false);
+    const [dataloading,setdataloading]=useState(false);
 
     const navigate = useNavigate();
     const findBids = async () => {
-      setloading(true);
+      setdataloading(true);
         const response = await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/bids/${gig._id}`, {
             method: "GET",
             credentials: "include"
         })
         const data = await response.json();
-        setloading(false);
+        setdataloading(false);
         if (data.status == "ok") setbids(data.bids);
         else {
             toast.error(data.error);
@@ -28,6 +29,7 @@ export default function AssignGig({ gig }) {
             }
         }
     }
+
     useEffect(() => {
       if(!authLoading && !isLoggedIn){
         toast.error("Login Required");
@@ -35,13 +37,15 @@ export default function AssignGig({ gig }) {
       }
         findBids();
     }, [])
+    
     const handleSubmit=async(val)=>{
+      setloading(true);
         const response=await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/${val._id}/hire`,{
             method:"PATCH",
             credentials:"include"
         })
         const temp=await response.json();
-        console.log(temp);
+        setloading(false);
         if(temp.status=="ok"){
             toast.success("Gig Assigned Succesfully");
             <MyGigs/>
@@ -59,14 +63,24 @@ export default function AssignGig({ gig }) {
       )
     }
 
+    const BigSpinner = () => {
+      return (
+        <div className="px-28 py-10" >
+        <span className="w-10 h-10 border-2 flex justify-center items-center border-black border-t-transparent p-2.5 rounded-full animate-spin"></span>
+        </div>
+      )
+    }
+
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-200">
+        <div className="flex flex-col space-y-5 justify-center items-center min-h-screen bg-gray-200">
             <div className="absolute left-2 top-2 m-2 p-2 border-2 border-black rounded-full cursor-pointer">
                 <House size={20} onClick={()=>navigate("/")}/>
             </div>
+            <p className="text-2xl">Bids For {gig.title}</p>
+
             <div className="bg-white px-10 py-5 space-y-5 text-center">
-                <p className="text-2xl">Bids For {gig.title}</p>
-                <div className="space-y-5 text-left mr-4">
+                <div className="space-y-5 text-left mr-4 w-full">
+                  {dataloading ? BigSpinner() :<>
                     {bids.length==0 ? <p className="text-center text-3xl p-10">No Bids Found</p> : <>
                         {bids.map((val, idx) => (
                         <div
@@ -75,7 +89,7 @@ export default function AssignGig({ gig }) {
                       >
                         <div className="space-y-2">
                           <div className="flex gap-2 flex-wrap">
-                            <p className="font-semibold shrink-0">Email :</p>
+                            <p className="font-semibold shrink-q0">Email :</p>
                             <p className="font-normal break-all whitespace-normal">
                               {val.email || "anonymous"}
                             </p>
@@ -100,6 +114,8 @@ export default function AssignGig({ gig }) {
                       </div>
                     ))}
                     </>}
+                  </>}
+                    
                 </div>
             </div>
         </div>

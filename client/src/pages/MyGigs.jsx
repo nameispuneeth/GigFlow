@@ -11,12 +11,16 @@ export default function MyGigs() {
     const [gigs,setgigs]=useState([]);
     const [assignGig,setassignGig]=useState(false);
     const [selected,setselected]=useState("");
+    const [dataloading,setdataloading]=useState(false);
+
     const getUserGigs=async()=>{
+        setdataloading(true);
         const response=await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/getusergigs`,{
             method:"GET",
             credentials:"include"
         });
         const data=await response.json();
+        setdataloading(false);
         if(data.status=="ok") setgigs(data.gigs);
         else{
             toast.error(data.error);
@@ -34,6 +38,12 @@ export default function MyGigs() {
         getUserGigs();
     },[]) 
 
+    const BigSpinner = () => {
+        return (
+          <span className="w-10 h-10 border-2 flex justify-center items-center m-10 border-black border-t-transparent p-2.5 rounded-full animate-spin"></span>
+        )
+      }
+
     return (
         <div className="flex flex-col justify-center items-center min-h-screen bg-gray-200">
             <div className="absolute left-2 top-2 m-2 p-2 border-2 border-black rounded-full cursor-pointer">
@@ -42,10 +52,11 @@ export default function MyGigs() {
             {assignGig ? <AssignGig gig={selected}/> :<>
                 <p className="text-center text-4xl m-5">My Gigs : </p>
             <button className="absolute right-2 top-2 bg-black text-white px-5 py-2" onClick={() => navigate("/gig")}>New Gig</button>
-            <div className="w-full max-w-sm bg-white p-6 rounded-md border space-y-5">
-                {gigs.map((data, idx) => (
+            <div className="w-full max-w-sm bg-white p-6 rounded-md border space-y-5 flex flex-col justify-center items-center">
+                {dataloading ? BigSpinner() : <>
+                    {gigs.map((data, idx) => (
                     (
-                        <div key={idx}>
+                        <div key={idx} className="w-full">
                             <div className="border border-black py-4 px-3 space-y-3">
                                 <div className="flex justify-between">
                                     <p className="font-bold text-lg">{data.title}</p>
@@ -72,7 +83,9 @@ export default function MyGigs() {
                         </div>
                     )
                 ))}
-            </div>
+
+                </>}
+                            </div>
             </>}
         </div>
     )

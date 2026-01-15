@@ -19,6 +19,7 @@ export default function Register() {
       toast.error("Passwords is To Small");
       return;
     }
+    setloading(true);
     e.preventDefault();
     const response=await fetch(`${import.meta.env.VITE_APP_API_BACKEND_URL}/api/auth/register`,{
       method:"POST",
@@ -32,6 +33,7 @@ export default function Register() {
       })
     });
     const data=await response.json();
+    setloading(false);
     if(data.status=="ok"){
       toast.success("Registered Successful");
       navigate("/login");
