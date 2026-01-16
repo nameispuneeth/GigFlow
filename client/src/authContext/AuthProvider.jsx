@@ -4,11 +4,12 @@ export const AuthContext = createContext();
 
 export default function AuthProvider ({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [authLoading, setAuthLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState(false);
 
   useEffect(() => {
     const checkSession = async () => {
       try {
+        setAuthLoading(true);
         const res = await fetch(
           `${import.meta.env.VITE_APP_API_BACKEND_URL}/api/getuserdet`,
           { credentials: "include" }
